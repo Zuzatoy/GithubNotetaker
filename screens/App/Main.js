@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,8 @@ import {
   TouchableHighlight,
   ActivityIndicator
 } from 'react-native';
-import { State } from 'react-native-gesture-handler';
+import { api } from './utils/api';
+import Dashboard from './Dashboard';
 
 var styles = StyleSheet.create({
     mainContainer: {
@@ -56,7 +57,7 @@ var styles = StyleSheet.create({
 
 export default class Main extends React.Component {
     state = {
-        userName: '',
+        username: '',
         isLoading: false,
         error: false,
 
@@ -64,14 +65,34 @@ export default class Main extends React.Component {
     
   handleChange = e => {
       this.setState({
-          userName: e.nativeEvent.text,
+          username: e.nativeEvent.text,
       })
     };
 
     handleSubmit = () => {
         this.setState({
             isLoading: true,
-        })
+        });
+            api.getBio(this.state.username)
+                .then((res) => {
+                    if(res.message === 'Nit Found') {
+                        this.setState({
+                            error: 'User not found',
+                            isLoading: false
+                        })
+                    } else {
+                        this.props.navigator.push({
+                            title: res.name || 'Select an option',
+                            component: Dashboard,
+                            passProps: {userInfo: res}
+                        });
+                        this.setState({
+                            isLoading: false,
+                            error: false,
+                            username: ''
+                        })
+                    }
+                })
     };
 
 
@@ -83,7 +104,7 @@ export default class Main extends React.Component {
             </Text>
             <TextInput
                 style={styles.searchInput}
-                value={this.state.userName}
+                value={this.state.username}
                 onChange={this.handleChange} />
             <TouchableHighlight
                 style={styles.button}
