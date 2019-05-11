@@ -97,6 +97,9 @@ export default class Main extends React.Component {
 
 
     render () {
+        const showErr = (
+            this.state.error ? <Text>{this.state.error}</Text> : <View></View>
+        )
     return (
       <View style={styles.mainContainer}>
             <Text style={styles.title}>
@@ -112,6 +115,12 @@ export default class Main extends React.Component {
                 underlayColor='#FFFFFF'>
                     <Text style={styles.buttonText}>SEARCH</Text>    
             </TouchableHighlight>
+            <ActivityIndicator
+                animating={this.state.isLoading}
+                color="#111"
+                size="large">
+            </ActivityIndicator>
+            {showErr}
       </View>
     );
     }
