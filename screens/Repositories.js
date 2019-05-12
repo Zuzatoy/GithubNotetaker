@@ -1,6 +1,7 @@
 import React from 'react';
 import Badge from './App/Badge';
 import Separator from './App/Separator';
+import RepoView from './App/RepoView';
 import {
     Text,
     View,
@@ -36,9 +37,13 @@ var styles = StyleSheet.create({
 
 
 export default class Repositories extends React.Component {
-    openPage = url => {
-        console.log('open URL', url);
-    }
+    openPage = (url) => {
+        this.props.navigator.push({
+          title: 'Web View',
+          component: RepoView,
+          passProps: { url }
+        });
+      }
     render() {
         const repos = this.props.repos;
         const list = repos.map((repo, index) => {
