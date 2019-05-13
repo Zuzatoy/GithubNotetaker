@@ -9,9 +9,9 @@ import {
 import Profile from './Profile';
 import Repositories from '../Repositories';
 import { api } from './utils/api';
+import Notes from './Notes';
 
-
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
       marginTop: 65,
       flex: 1
@@ -45,7 +45,18 @@ export default class Dashboard extends React.Component {
     }
 
     goToNotes = () => {
-        console.log("Going to notes!");
+        api.getNote(this.props.userInfo.login)
+        .then((res) => {
+            res = res || {};
+            this.props.navigator.push({
+                component: Notes,
+                title: 'Notes',
+                passProps: {
+                    notes: res,
+                    userInfo: this.props.userInfo
+                }
+            })
+        })
     }
 
     goToProfile = () => {
